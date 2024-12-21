@@ -1,0 +1,2 @@
+# clustermatic
+Automated clustering library
