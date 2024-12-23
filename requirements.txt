@@ -1,0 +1,6 @@
+scikit-learn~=1.6.0
+numpy~=1.26.4
+pandas~=2.0.0
+scikit-optimize~=0.10.2
+matplotlib~=3.10.0
+pyamg~=5.2.1
