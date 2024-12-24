@@ -18,7 +18,7 @@ def silhouette_scorer(estimator, X):
 
 
 def davies_bouldin_scorer(estimator, X):
-    return cluster_scorer(estimator, X, davies_bouldin_score, float("inf"))
+    return cluster_scorer(estimator, X, davies_bouldin_score, 999999)
 
 
 def calinski_harabasz_scorer(estimator, X):
