@@ -1,15 +1,23 @@
 from skopt import BayesSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 import pandas as pd
 from clustermatic.scoring import (
     silhouette_scorer,
     davies_bouldin_scorer,
     calinski_harabasz_scorer,
 )
-from clustermatic.utils import search_spaces
+from clustermatic.utils import search_spaces_bayes, search_spaces_random
 
 
-class BayesianOptimizer:
-    def __init__(self, n_iterations=30, score_metric="silhouette"):
+class Optimizer:
+    def __init__(
+        self, optimization_method="bayes", n_iterations=30, score_metric="silhouette"
+    ):
+        assert optimization_method in [
+            "bayes",
+            "random",
+        ], "Invalid optimization method. Choose from 'bayes' or 'random'."
+        self.optimization_method = optimization_method
         self.n_iterations = n_iterations
         self.scorers = {
             "silhouette": silhouette_scorer,
@@ -21,12 +29,20 @@ class BayesianOptimizer:
         ), "Invalid score metric. Choose from 'silhouette', 'davies_bouldin', or 'calinski_harabasz'."
         self.scorer = self.scorers[score_metric]
 
-    def bayesian_search(self, X):
+    def optimize(self, X):
         results = []
         best_models = {}
+        search_spaces = (
+            search_spaces_bayes
+            if self.optimization_method == "bayes"
+            else search_spaces_random
+        )
+        search_class = (
+            BayesSearchCV if self.optimization_method == "bayes" else RandomizedSearchCV
+        )
 
         for algorithm, params in search_spaces.items():
-            search = BayesSearchCV(
+            search = search_class(
                 algorithm(),
                 params,
                 n_iter=self.n_iterations,
@@ -47,7 +63,16 @@ class BayesianOptimizer:
 
             best_models[algorithm.__name__] = best_model
 
-        report = pd.DataFrame(results)
+        sort_ascending = (
+            False
+            if self.scorer in [silhouette_scorer, calinski_harabasz_scorer]
+            else True
+        )
+        report = (
+            pd.DataFrame(results)
+            .sort_values(by="Best Score", ascending=sort_ascending)
+            .reset_index(drop=True)
+        )
         self.report = report
 
         return best_models, report
