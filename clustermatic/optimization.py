@@ -16,7 +16,11 @@ import time
 
 class Optimizer:
     def __init__(
-        self, optimization_method="bayes", n_iterations=30, score_metric="silhouette"
+        self,
+        optimization_method="bayes",
+        n_iterations=30,
+        score_metric="silhouette",
+        seed=None,
     ):
         assert optimization_method in [
             "bayes",
@@ -34,6 +38,7 @@ class Optimizer:
             score_metric in self.scorers
         ), "Invalid score metric. Choose from 'silhouette', 'davies_bouldin', or 'calinski_harabasz'."
         self.scorer = self.scorers[score_metric]
+        self.seed = seed
 
     def optimize(self, X):
         results = []
@@ -57,6 +62,7 @@ class Optimizer:
                 param_space=param_space,
                 n_iterations=self.n_iterations,
                 scoring_func=self.scorer,
+                seed=self.seed,
             )
             start_time = time.time()
             search.fit(X)

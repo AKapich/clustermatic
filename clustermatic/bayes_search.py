@@ -7,11 +7,12 @@ from clustermatic.scoring import (
 
 
 class BayesSearch(BaseEstimator):
-    def __init__(self, algorithm, n_iterations, param_space, scoring_func):
+    def __init__(self, algorithm, n_iterations, param_space, scoring_func, seed=None):
         self.algorithm = algorithm
         self.n_iterations = n_iterations
         self.param_space = param_space
         self.scoring_func = scoring_func
+        self.seed = seed
         self.multiplier = (
             -1 if scoring_func in [silhouette_scorer, calinski_harabasz_scorer] else 1
         )
@@ -27,7 +28,10 @@ class BayesSearch(BaseEstimator):
             return score * self.multiplier
 
         result = gp_minimize(
-            objective, list(self.param_space.values()), n_calls=self.n_iterations
+            objective,
+            list(self.param_space.values()),
+            n_calls=self.n_iterations,
+            random_state=self.seed,
         )
 
         best_params = {

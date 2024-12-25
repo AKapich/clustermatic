@@ -18,6 +18,7 @@ class AutoClusterizer:
         numerical_scaling_strategy="standard",
         categorical_encoding_strategy="onehot",
         reduce_dim=False,
+        seed=None,
     ):
         self.preprocessor = Preprocessor(
             numerical_impute_strategy=numerical_impute_strategy,
@@ -30,6 +31,7 @@ class AutoClusterizer:
             optimization_method=optimization_method,
             n_iterations=n_iterations,
             score_metric=score_metric,
+            seed=seed,
         )
         self.best_model = None
         self.best_models = None

@@ -9,6 +9,7 @@ from sklearn.preprocessing import (
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer, make_column_selector
+from pandas import DataFrame
 
 
 class Preprocessor:
@@ -49,6 +50,8 @@ class Preprocessor:
         self.n_components = n_components
 
     def process(self, data):
+        if not isinstance(data, DataFrame):
+            data = DataFrame(data)
 
         numerical_transformer = Pipeline(
             steps=[
