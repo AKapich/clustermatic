@@ -16,6 +16,7 @@ class BayesSearch(BaseEstimator):
         self.multiplier = (
             -1 if scoring_func in [silhouette_scorer, calinski_harabasz_scorer] else 1
         )
+        self.scores_ = []
 
     def fit(self, X):
         def objective(params):
@@ -25,6 +26,7 @@ class BayesSearch(BaseEstimator):
             model = self.algorithm(**param_dict)
             model.fit(X)
             score = self.scoring_func(model, X)
+            self.scores_.append(score)
             return score * self.multiplier
 
         result = gp_minimize(

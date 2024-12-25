@@ -24,6 +24,7 @@ class RandomizedSearch(BaseEstimator):
         self.seed = seed
         if self.seed is not None:
             random.seed(self.seed)
+        self.scores_ = []
 
     def fit(self, X):
         def sample_params():
@@ -44,6 +45,7 @@ class RandomizedSearch(BaseEstimator):
 
             model.fit(X)
             score = self.scoring_func(model, X)
+            self.scores_.append(score)
 
             if (
                 score < self.best_score_ and self.scoring_func == davies_bouldin_scorer

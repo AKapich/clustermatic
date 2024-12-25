@@ -39,6 +39,7 @@ class Optimizer:
         ), "Invalid score metric. Choose from 'silhouette', 'davies_bouldin', or 'calinski_harabasz'."
         self.scorer = self.scorers[score_metric]
         self.seed = seed
+        self.scores_ = []
 
     def optimize(self, X):
         results = []
@@ -68,6 +69,7 @@ class Optimizer:
             search.fit(X)
             end_time = time.time()
             train_time = end_time - start_time
+            self.scores_.append((algorithm.__name__, search.scores_))
 
             results.append(
                 {
