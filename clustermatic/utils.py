@@ -6,45 +6,46 @@ from sklearn.cluster import (
     SpectralClustering,
     OPTICS,
 )
+from skopt.space import Integer, Real, Categorical
 from scipy.stats import uniform, randint
 
 
 search_spaces_bayes = {
     KMeans: {
-        "n_clusters": (2, 10),
-        "init": ["k-means++", "random"],
-        "n_init": (10, 20),
-        "tol": (1e-4, 1e-2),
+        "n_clusters": Integer(2, 10),
+        "init": Categorical(["k-means++", "random"]),
+        "n_init": Integer(10, 20),
+        "tol": Real(1e-4, 1e-2, prior="log-uniform"),
     },
     DBSCAN: {
-        "eps": (0.1, 10.0),
-        "min_samples": (2, 20),
-        "metric": ["euclidean", "manhattan", "cosine"],
+        "eps": Real(0.1, 10.0, prior="uniform"),
+        "min_samples": Integer(2, 20),
+        "metric": Categorical(["euclidean", "manhattan", "cosine"]),
     },
     MiniBatchKMeans: {
-        "n_clusters": (2, 10),
-        "init": ["k-means++", "random"],
-        "n_init": (10, 20),
-        "tol": (1e-4, 1e-2),
-        "max_iter": (100, 300),
-        "batch_size": (10, 100),
+        "n_clusters": Integer(2, 10),
+        "init": Categorical(["k-means++", "random"]),
+        "n_init": Integer(10, 20),
+        "tol": Real(1e-4, 1e-2, prior="log-uniform"),
+        "max_iter": Integer(100, 300),
+        "batch_size": Integer(10, 100),
     },
     AgglomerativeClustering: {
-        "n_clusters": (2, 10),
-        "metric": ["euclidean", "l1", "l2", "manhattan", "cosine"],
-        "linkage": ["complete", "average", "single"],
+        "n_clusters": Integer(2, 10),
+        "metric": Categorical(["euclidean", "l1", "l2", "manhattan", "cosine"]),
+        "linkage": Categorical(["complete", "average", "single"]),
     },
     OPTICS: {
-        "min_samples": (2, 20),
-        "xi": (0.01, 0.5),
-        "min_cluster_size": (0.01, 0.5),
+        "min_samples": Integer(2, 20),
+        "xi": Real(0.01, 0.5, prior="uniform"),
+        "min_cluster_size": Real(0.01, 0.5, prior="uniform"),
     },
     SpectralClustering: {
-        "n_clusters": (2, 10),
-        "eigen_solver": ["arpack", "lobpcg", "amg"],
-        "affinity": ["nearest_neighbors", "rbf"],
-        "n_init": (10, 20),
-        "assign_labels": ["kmeans", "discretize"],
+        "n_clusters": Integer(2, 10),
+        "eigen_solver": Categorical(["arpack", "lobpcg", "amg"]),
+        "affinity": Categorical(["nearest_neighbors", "rbf"]),
+        "n_init": Integer(10, 20),
+        "assign_labels": Categorical(["kmeans", "discretize"]),
     },
 }
 
@@ -92,3 +93,15 @@ search_spaces_random = {
         "assign_labels": ["kmeans", "discretize"],
     },
 }
+
+
+def adjust_search_spaces(search_spaces, data):
+    max_clusters = len(data) // 3
+    for space in search_spaces.values():
+        if "n_clusters" in space.keys():
+            space["n_clusters"] = (
+                Integer(2, max_clusters)
+                if isinstance(space["n_clusters"], Integer)
+                else randint(2, max_clusters)
+            )
+    return search_spaces
