@@ -39,26 +39,28 @@ class Optimizer:
         ), "Invalid score metric. Choose from 'silhouette', 'davies_bouldin', or 'calinski_harabasz'."
         self.scorer = self.scorers[score_metric]
         self.seed = seed
+        self.search_spaces = (
+            search_spaces_bayes
+            if self.optimization_method == "bayes"
+            else search_spaces_random
+        )
         self.scores_ = []
+        self.search_class = (
+            BayesSearch if self.optimization_method == "bayes" else RandomizedSearch
+        )
 
     def optimize(self, X):
         results = []
         best_models = {}
         search_spaces = (
-            search_spaces_bayes
-            if self.optimization_method == "bayes"
-            else search_spaces_random
-        )
-        search_spaces = (
-            adjust_search_spaces(search_spaces, X) if len(X) < 60 else search_spaces
-        )
-        search_class = (
-            BayesSearch if self.optimization_method == "bayes" else RandomizedSearch
+            adjust_search_spaces(self.search_spaces, X)
+            if len(X) < 60
+            else self.search_spaces
         )
 
         for algorithm, param_space in search_spaces.items():
             print(f"Optimizing {algorithm.__name__}")
-            search = search_class(
+            search = self.search_class(
                 algorithm=algorithm,
                 param_space=param_space,
                 n_iterations=self.n_iterations,

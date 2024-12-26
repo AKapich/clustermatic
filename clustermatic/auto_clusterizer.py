@@ -2,6 +2,7 @@ from clustermatic.preprocessing import Preprocessor
 from clustermatic.optimization import Optimizer
 from clustermatic.model_saver import ModelSaver
 from clustermatic.evaluation import Evaluator
+from clustermatic.scoring import score_metric_values
 import warnings
 from datetime import datetime
 import os
@@ -35,7 +36,9 @@ class AutoClusterizer:
             score_metric=score_metric,
             seed=seed,
         )
-        self.evaluator = Evaluator()
+        self.evaluator = Evaluator(
+            filler_value=score_metric_values.get(score_metric, None)
+        )
         self.best_model = None
         self.best_models = None
         self.report = None

@@ -8,12 +8,17 @@ import pkg_resources
 
 
 class Evaluator:
-    def __init__(self):
-        pass
+    def __init__(self, filler_value):
+        self.filler_value = filler_value
 
     def boxplot(self, scores, filename):
-        model_names = scores.keys()
-        model_scores = scores.values()
+        filtered_scores = {
+            model: [score for score in scores_list if score != self.filler_value]
+            for model, scores_list in scores.items()
+        }
+
+        model_names = filtered_scores.keys()
+        model_scores = filtered_scores.values()
         plt.figure(figsize=(14, 7))
         sns.set_theme(style="whitegrid")
 
@@ -37,14 +42,32 @@ class Evaluator:
         plt.title("Model performance", fontsize=16, fontweight="bold", pad=20)
         plt.xlabel("Models", fontsize=14, labelpad=10)
         plt.ylabel("Score", fontsize=14, labelpad=10)
-
+        plt.figtext(
+            0.066,
+            -0.005,
+            "Algorithms that failed to cluster the data\nare excluded from the plot",
+            ha="left",
+            fontsize=10,
+        )
         plt.tight_layout()
         plt.savefig(filename, format="png", bbox_inches="tight")
 
     def cumulative_plot(self, scores, filename):
-        cumulative_best_scores = {
-            model: [max(scores_list[: i + 1]) for i in range(len(scores_list))]
+        filtered_scores = {
+            model: [
+                (i + 1, score)
+                for i, score in enumerate(scores_list)
+                if score != self.filler_value
+            ]
             for model, scores_list in scores.items()
+        }
+
+        cumulative_best_scores = {
+            model: [
+                max(score for _, score in filtered_scores[model][: i + 1])
+                for i in range(len(filtered_scores[model]))
+            ]
+            for model in filtered_scores
         }
 
         plt.figure(figsize=(14, 7))
@@ -64,10 +87,18 @@ class Evaluator:
         )
         plt.xlabel("Iteration", fontsize=14, labelpad=10)
         plt.ylabel("Best Score", fontsize=14, labelpad=10)
-        plt.xticks(range(1, len(next(iter(cumulative_best_scores.values()))) + 1))
+        plt.xticks(
+            sorted(set(x for values in filtered_scores.values() for x, _ in values))
+        )
         plt.legend(title="Models", loc="lower right", fontsize=12, frameon=True)
-
         plt.grid(axis="y", linestyle="--", alpha=0.7)
+        plt.figtext(
+            0.066,
+            -0.005,
+            "Algorithms that failed to cluster the data\nare excluded from the plot",
+            ha="left",
+            fontsize=10,
+        )
         plt.tight_layout()
         plt.savefig(filename, format="png", bbox_inches="tight")
 
