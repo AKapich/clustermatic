@@ -5,6 +5,7 @@ import base64
 from jinja2 import Template
 import os
 import pkg_resources
+from datetime import datetime
 
 
 class Evaluator:
@@ -126,11 +127,11 @@ class Evaluator:
         plt.savefig(filename, format="png", bbox_inches="tight")
 
     def evaluate(self, scores, report, best_model, data):
-        if not os.path.exists("report"):
-            os.makedirs("report")
-        boxplot_file = "report/boxplot.png"
-        cumulative_file = "report/cumulative.png"
-        cluster_file = "report/clusters.png"
+        if not os.path.exists("clustermatic_report"):
+            os.makedirs("clustermatic_report")
+        boxplot_file = "clustermatic_report/boxplot.png"
+        cumulative_file = "clustermatic_report/cumulative.png"
+        cluster_file = "clustermatic_report/clusters.png"
         logo_path = pkg_resources.resource_filename(__name__, "auxiliary/header.png")
 
         print(report)
@@ -156,5 +157,7 @@ class Evaluator:
             cluster=image_to_base64(cluster_file),
         )
 
-        with open("report/report.html", "w") as f:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_filename = f"clustermatic_report/report_{timestamp}.html"
+        with open(report_filename, "w") as f:
             f.write(html_content)

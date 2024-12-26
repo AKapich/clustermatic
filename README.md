@@ -1,16 +1,29 @@
 ![clustermatic](clustermatic/auxiliary/clustermatic.png)
 
+# clustermatic
+
 `clustermatic` is a Python library designed to accelerate clustering tasks using `scikit-learn`. It serves as a quick tool for selecting the optimal clustering algorithm and its hyperparameters, providing visualizations and metrics for comparison.
 
 ## Features
 
-- **Evaluation Metrics**: Supports evaluation with `silhouette`, `calinski_harabasz` and `davies_bouldin` scores.
-- **Optimization Methods**: Includes Bayesian optimization & random search for hyperparameter tuning.
-- **Clustering Algorithms**: Analyzes 6 clustering algorithms from `scikit-learn`:
+- **Clustering Algorithms**: Analyzes six clustering algorithms from `scikit-learn`:
     - `KMeans`
     - `DBSCAN`
     - `MiniBatchKMeans`
     - `AgglomerativeClustering`
     - `OPTICS`
     - `SpectralClustering`
+- **Optimization Methods**: Includes Bayesian optimization and random search for hyperparameter tuning.
+- **Evaluation Metrics**: Supports evaluation with `silhouette`, `calinski_harabasz`, and `davies_bouldin` scores.
 - **Report Generation**: Generates reports in HTML format after optimization.
+
+## Installation
+
+To install `clustermatic`, use pip:
+
+```bash
+pip install clustermatic
+```
+
+
+
