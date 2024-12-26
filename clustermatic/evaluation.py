@@ -4,6 +4,7 @@ from sklearn.decomposition import PCA
 import base64
 from jinja2 import Template
 import os
+import pkg_resources
 
 
 class Evaluator:
@@ -99,7 +100,7 @@ class Evaluator:
         boxplot_file = "report/boxplot.png"
         cumulative_file = "report/cumulative.png"
         cluster_file = "report/clusters.png"
-        logo_path = "auxiliary/header.png"
+        logo_path = pkg_resources.resource_filename(__name__, "auxiliary/header.png")
 
         print(report)
         self.boxplot(scores, boxplot_file)
@@ -110,7 +111,10 @@ class Evaluator:
             with open(filepath, "rb") as f:
                 return base64.b64encode(f.read()).decode("utf-8")
 
-        with open("auxiliary/report_template.html", "r") as file:
+        with open(
+            pkg_resources.resource_filename(__name__, "auxiliary/report_template.html"),
+            "r",
+        ) as file:
             html_template = Template(file.read())
 
         html_content = html_template.render(
