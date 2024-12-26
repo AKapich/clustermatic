@@ -22,6 +22,7 @@ class AutoClusterizer:
         categorical_encoding_strategy="onehot",
         reduce_dim=False,
         seed=None,
+        exclude_algorithms=[],
     ):
         self.preprocessor = Preprocessor(
             numerical_impute_strategy=numerical_impute_strategy,
@@ -35,6 +36,7 @@ class AutoClusterizer:
             n_iterations=n_iterations,
             score_metric=score_metric,
             seed=seed,
+            exclude_algorithms=exclude_algorithms,
         )
         self.evaluator = Evaluator(
             filler_value=score_metric_values.get(score_metric, None)

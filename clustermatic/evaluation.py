@@ -43,7 +43,7 @@ class Evaluator:
         plt.xlabel("Models", fontsize=14, labelpad=10)
         plt.ylabel("Score", fontsize=14, labelpad=10)
         plt.figtext(
-            0.066,
+            0.067,
             -0.005,
             "Algorithms that failed to cluster the data\nare excluded from the plot",
             ha="left",
@@ -93,7 +93,7 @@ class Evaluator:
         plt.legend(title="Models", loc="lower right", fontsize=12, frameon=True)
         plt.grid(axis="y", linestyle="--", alpha=0.7)
         plt.figtext(
-            0.066,
+            0.067,
             -0.005,
             "Algorithms that failed to cluster the data\nare excluded from the plot",
             ha="left",

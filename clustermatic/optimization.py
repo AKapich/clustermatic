@@ -21,6 +21,7 @@ class Optimizer:
         n_iterations=30,
         score_metric="silhouette",
         seed=None,
+        exclude_algorithms=[],
     ):
         assert optimization_method in [
             "bayes",
@@ -39,11 +40,15 @@ class Optimizer:
         ), "Invalid score metric. Choose from 'silhouette', 'davies_bouldin', or 'calinski_harabasz'."
         self.scorer = self.scorers[score_metric]
         self.seed = seed
-        self.search_spaces = (
-            search_spaces_bayes
-            if self.optimization_method == "bayes"
-            else search_spaces_random
-        )
+        self.search_spaces = {
+            k: v
+            for k, v in (
+                search_spaces_bayes
+                if self.optimization_method == "bayes"
+                else search_spaces_random
+            ).items()
+            if k.__name__ not in exclude_algorithms
+        }
         self.scores_ = []
         self.search_class = (
             BayesSearch if self.optimization_method == "bayes" else RandomizedSearch
