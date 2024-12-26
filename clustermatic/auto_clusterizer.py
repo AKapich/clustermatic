@@ -4,6 +4,7 @@ from clustermatic.model_saver import ModelSaver
 from clustermatic.evaluation import Evaluator
 import warnings
 from datetime import datetime
+import os
 
 warnings.filterwarnings("ignore")
 
@@ -49,7 +50,9 @@ class AutoClusterizer:
         self.scores_ = self.optimizer.scores_
         if save_model:
             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-            model_path = f"clustermatic/best_model_{report.iloc[0]['Algorithm']}_{current_time}.pkl"
+            if not os.path.exists("clustermatic_models"):
+                os.makedirs("clustermatic_models")
+            model_path = f"clustermatic_models/best_model_{report.iloc[0]['Algorithm']}_{current_time}.pkl"
             model_saver = ModelSaver(self.best_model, model_path)
             model_saver.save_model()
 

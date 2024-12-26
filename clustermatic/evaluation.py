@@ -1,13 +1,16 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.decomposition import PCA
+import base64
+from jinja2 import Template
+import os
 
 
 class Evaluator:
     def __init__(self):
         pass
 
-    def boxplot(self, scores):
+    def boxplot(self, scores, filename):
         model_names = scores.keys()
         model_scores = scores.values()
         plt.figure(figsize=(14, 7))
@@ -32,16 +35,12 @@ class Evaluator:
 
         plt.title("Model performance", fontsize=16, fontweight="bold", pad=20)
         plt.xlabel("Models", fontsize=14, labelpad=10)
-        plt.ylabel("Scores", fontsize=14, labelpad=10)
-
-        for i, color in enumerate(palette):
-            plt.scatter([], [], c=[color], label=list(model_names)[i])
-        plt.legend(title="Models", loc="lower right", frameon=True)
+        plt.ylabel("Score", fontsize=14, labelpad=10)
 
         plt.tight_layout()
-        plt.show()
+        plt.savefig(filename, format="png", bbox_inches="tight")
 
-    def cummulative_plot(self, scores):
+    def cumulative_plot(self, scores, filename):
         cumulative_best_scores = {
             model: [max(scores_list[: i + 1]) for i in range(len(scores_list))]
             for model, scores_list in scores.items()
@@ -69,9 +68,9 @@ class Evaluator:
 
         plt.grid(axis="y", linestyle="--", alpha=0.7)
         plt.tight_layout()
-        plt.show()
+        plt.savefig(filename, format="png", bbox_inches="tight")
 
-    def clusters_plot(self, best_model, data):
+    def clusters_plot(self, best_model, data, filename):
         labels = best_model.fit_predict(data)
         plt.figure(figsize=(14, 7))
         if data.shape[1] == 2:
@@ -92,10 +91,35 @@ class Evaluator:
         plt.ylabel(y_label, fontsize=14, labelpad=10)
         plt.grid(True)
         plt.tight_layout()
-        plt.show()
+        plt.savefig(filename, format="png", bbox_inches="tight")
 
     def evaluate(self, scores, report, best_model, data):
+        if not os.path.exists("report"):
+            os.makedirs("report")
+        boxplot_file = "report/boxplot.png"
+        cumulative_file = "report/cumulative.png"
+        cluster_file = "report/clusters.png"
+        logo_path = "auxiliary/header.png"
+
         print(report)
-        self.boxplot(scores)
-        self.cummulative_plot(scores)
-        self.clusters_plot(best_model, data)
+        self.boxplot(scores, boxplot_file)
+        self.cumulative_plot(scores, cumulative_file)
+        self.clusters_plot(best_model, data, cluster_file)
+
+        def image_to_base64(filepath):
+            with open(filepath, "rb") as f:
+                return base64.b64encode(f.read()).decode("utf-8")
+
+        with open("auxiliary/report_template.html", "r") as file:
+            html_template = Template(file.read())
+
+        html_content = html_template.render(
+            logo=image_to_base64(logo_path),
+            report=report,
+            boxplot=image_to_base64(boxplot_file),
+            cumulative=image_to_base64(cumulative_file),
+            cluster=image_to_base64(cluster_file),
+        )
+
+        with open("report/report.html", "w") as f:
+            f.write(html_content)
