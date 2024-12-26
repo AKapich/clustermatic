@@ -63,9 +63,10 @@ class Evaluator:
             for model, scores_list in scores.items()
         }
 
+        func = min if self.filler_value == 999999 else max
         cumulative_best_scores = {
             model: [
-                max(score for _, score in filtered_scores[model][: i + 1])
+                func(score for _, score in filtered_scores[model][: i + 1])
                 for i in range(len(filtered_scores[model]))
             ]
             for model in filtered_scores
@@ -100,6 +101,8 @@ class Evaluator:
             ha="left",
             fontsize=10,
         )
+        if self.filler_value == 999999:
+            plt.gca().invert_yaxis()
         plt.tight_layout()
         plt.savefig(filename, format="png", bbox_inches="tight")
 
@@ -117,7 +120,7 @@ class Evaluator:
             title = "Cluster Plot (PCA)"
 
         sns.scatterplot(
-            x=plot_data[:, 0], y=plot_data[:, 1], hue=labels, palette="viridis"
+            x=plot_data[:, 0], y=plot_data[:, 1], hue=labels, palette="turbo"
         )
         plt.title(title, fontsize=16, fontweight="bold", pad=20)
         plt.xlabel(x_label, fontsize=14, labelpad=10)
