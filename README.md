@@ -1,4 +1,4 @@
-![clustermatic](https://raw.githubusercontent.com/AKapich/clustermatic/refs/heads/main/clustermatic/auxiliary/clustermatic.png?token=GHSAT0AAAAAACONR7OM5CSD6SYQXJVMPT6IZ3NVYJQ)
+![clustermatic](https://raw.githubusercontent.com/AKapich/clustermatic/refs/heads/main/clustermatic/auxiliary/clustermatic.png?token=GHSAT0AAAAAACONR7OMONQGEKX7G6LBQ6TQZ3NYFEQ)
 
 # clustermatic
 
