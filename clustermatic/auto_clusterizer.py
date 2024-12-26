@@ -3,11 +3,8 @@ from clustermatic.optimization import Optimizer
 from clustermatic.model_saver import ModelSaver
 from clustermatic.evaluation import Evaluator
 from clustermatic.scoring import score_metric_values
-import warnings
 from datetime import datetime
 import os
-
-warnings.filterwarnings("ignore")
 
 
 class AutoClusterizer:

@@ -1,4 +1,4 @@
-![clustermatic](https://raw.githubusercontent.com/AKapich/clustermatic/refs/heads/main/clustermatic/auxiliary/clustermatic.png?token=GHSAT0AAAAAACONR7OMONQGEKX7G6LBQ6TQZ3NYFEQ)
+![clustermatic](https://raw.githubusercontent.com/AKapich/clustermatic/refs/heads/main/clustermatic/auxiliary/clustermatic.png)
 
 # clustermatic
 
@@ -14,6 +14,7 @@
     - `OPTICS`
     - `SpectralClustering`
 - **Optimization Methods**: Includes Bayesian optimization and random search for hyperparameter tuning.
+- **Flexible Preprocessing**: Allows users to customize how the data is meant to be preprocessed, adjusting methods such as scaling, normalization, and dimensionality reduction.
 - **Evaluation Metrics**: Supports evaluation with `silhouette`, `calinski_harabasz`, and `davies_bouldin` scores.
 - **Report Generation**: Generates reports in HTML format after optimization.
 
