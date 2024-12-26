@@ -170,5 +170,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-/report
+/clustermatic_report
 /clustermatic_models
