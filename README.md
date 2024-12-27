@@ -1,6 +1,12 @@
 ![clustermatic](https://raw.githubusercontent.com/AKapich/clustermatic/refs/heads/main/clustermatic/auxiliary/clustermatic.png)
 
-# clustermatic
+---
+
+![PyPI](https://img.shields.io/pypi/v/clustermatic)
+![Python Versions](https://img.shields.io/pypi/pyversions/clustermatic)
+
+
+
 
 `clustermatic` is a Python library designed to accelerate clustering tasks using `scikit-learn`. It serves as a quick tool for selecting the optimal clustering algorithm and its hyperparameters, providing visualizations and metrics for comparison.
 
@@ -48,4 +54,4 @@ ac.fit(X)
 ac.evaluate()
 ```
 
-For more detailed walkthrough, check out [this example Jupyter Notebook](https://github.com/AKapich/clustermatic/tree/main/examples)
+For more detailed walkthrough, check out [this example Jupyter Notebook](https://github.com/AKapich/clustermatic/blob/main/examples/example.ipynb)
