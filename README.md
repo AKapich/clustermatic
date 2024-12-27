@@ -27,4 +27,25 @@ pip install clustermatic
 ```
 
 
+## Usage
 
+For a quick a quick start, use the following code snippet:
+
+```python
+from clustermatic import AutoClusterizer
+
+# Load data
+from sklearn.datasets import make_moons
+X, _ = make_moons(n_samples=200, noise=0.1, random_state=42)
+
+# Initialize AutoClusterizer
+ac = AutoClusterizer()
+
+# Fit the data
+ac.fit(X)
+
+# Generate report
+ac.evaluate()
+```
+
+For more detailed walkthrough, check out [this example Jupyter Notebook](https://github.com/AKapich/clustermatic/tree/main/examples)

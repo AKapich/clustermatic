@@ -72,7 +72,7 @@ class AutoClusterizer:
         self.fit(X, save_model)
         return self.cluster()
 
-    def evaluate(self, X):
+    def evaluate(self):
         assert hasattr(
             self, "scores_"
         ), "Model not trained. Run fit method before evaluate."
