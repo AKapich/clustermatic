@@ -35,7 +35,7 @@ pip install clustermatic
 
 ## Usage
 
-For a quick a quick start, use the following code snippet:
+For a quick start, use the following code snippet:
 
 ```python
 from clustermatic import AutoClusterizer
